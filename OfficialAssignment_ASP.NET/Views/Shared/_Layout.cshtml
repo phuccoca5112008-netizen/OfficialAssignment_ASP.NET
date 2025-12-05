@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RobinStore</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header & Navbar */
+        header {
+            background: linear-gradient(90deg, #8e0f0f, #e11010); /* Red Gradient */
+        }
+        
+        .top-bar {
+            background-color: transparent;
+            padding: 10px 0;
+        }
+        
+        .search-bar {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 40px 8px 15px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+        }
+        
+        .nav-bottom {
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle overlay for menu */
+            padding: 0;
+        }
+        
+        .nav-bottom .nav-link {
+            color: #e8e8e8 !important;
+            font-size: 14px;
+            padding: 15px 20px !important;
+            transition: color 0.3s;
+        }
+        
+        .nav-bottom .nav-link:hover {
+            color: #fff !important;
+        }
+
+        .nav-line {
+            height: 1.3px;
+            background-color: rgba(255, 255, 255, 0.6);
+            flex-grow: 1;
+        }
+        
+        .header-icon {
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon i {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #151515;
+            color: #999;
+            padding: 60px 0 30px;
+            font-size: 13px;
+            border-top: 4px solid #e11010; /* Red accent */
+            margin-top: auto;
+        }
+        footer h5 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        footer ul {
+            padding-left: 0;
+            list-style: none;
+        }
+        footer ul li {
+            margin-bottom: 10px;
+        }
+        footer ul li a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer ul li a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        
+        .footer-hotline-box {
+            background-color: #fff;
+            color: #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+        .footer-hotline-box strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .footer-hotline-box span {
+            display: block;
+            margin-bottom: 3px;
+        }
+        .footer-social a {
+            color: #555;
+            font-size: 24px;
+            margin-right: 15px;
+            transition: color 0.3s;
+        }
+        .footer-social a:hover {
+            color: #fff;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: #0071e3;
+            border: none;
+            border-radius: 980px;
+            padding: 8px 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Top Bar: Logo, Search, Cart, Account -->
+        <div class="top-bar">
+            <div class="container">
+                <div class="row align-items-center">
+                    <!-- Left: Logo & Badge -->
+                    <div class="col-3 d-flex align-items-center justify-content-end pe-2">
+                        <a class="navbar-brand d-flex align-items-center me-2" asp-controller="Home" asp-action="Index">
+                            <img src="~/images/robinstore_logo.png" alt="RobinStore" style="height: 50px; object-fit: contain;">
+                        </a>
+                        <!-- Authorised Reseller Badge -->
+                        <div class="d-none d-xl-block border-start border-white ps-2 ms-2" style="opacity: 0.8;">
+                            <div class="text-white" style="font-size: 10px; line-height: 1.2; white-space: nowrap;">
+                                <i class="fa-brands fa-apple fa-lg"></i><br>
+                                Authorised<br>Reseller
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center: Search Bar -->
+                    <div class="col-6">
+                        <div class="search-bar w-100 position-relative mx-auto">
+                            <form asp-controller="Product" asp-action="Search" method="get" autocomplete="off">
+                                <input type="text" name="keyword" id="searchInput" class="search-input" placeholder="Bạn tìm gì..." style="border-radius: 8px;">
+                                <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>
+                            <!-- Suggestion Dropdown -->
+                            <div id="searchSuggestions" class="position-absolute w-100 bg-white shadow-sm rounded-bottom start-0" style="top: 100%; z-index: 1000; display: none; overflow: hidden;">
+                                <ul class="list-group list-group-flush" id="suggestionList">
+                                    <!-- Items will be appended here -->
+                                </ul>
+                                <div class="p-2 text-center border-top bg-light">
+                                    <a href="#" id="viewAllResults" class="text-decoration-none small">Xem tất cả kết quả ...</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Icons -->
+                    <div class="col-3 d-flex align-items-center justify-content-start ps-2">
+                        <a href="/Cart" class="header-icon position-relative text-nowrap">
+                            <i class="fa-solid fa-cart-shopping fa-lg"></i> 
+                            <span class="d-none d-lg-inline ms-1">Giỏ hàng</span>
+                        </a>
+                        
+                        @if (Context.Session.GetString("Username") != null)
+                        {
+                            <div class="dropdown ms-3">
+                                <a href="#" class="header-icon dropdown-toggle text-decoration-none text-nowrap" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-regular fa-user fa-lg"></i> 
+                                    <span class="d-none d-lg-inline ms-1">@Context.Session.GetString("FullName")</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" style="border-radius: 12px; overflow: hidden;">
+                                    <li><a class="dropdown-item py-2" href="/Account/Profile">Hồ sơ cá nhân</a></li>
+                                    <li><a class="dropdown-item py-2" href="/Account/History">Lịch sử đơn hàng</a></li>
+                                    @if (Context.Session.GetInt32("Role") == 0 || Context.Session.GetInt32("Role") == 1)
+                                    {
+                                        <li><a class="dropdown-item py-2" href="/Admin">Trang quản trị</a></li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item py-2 text-danger" href="/Account/Logout">Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="header-icon ms-3 text-nowrap">
+                                <i class="fa-regular fa-user fa-lg"></i> 
+                                <span class="d-none d-lg-inline ms-1">Đăng nhập</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar: Menu Items -->
+        <div class="nav-bottom">
+            <div class="container d-flex align-items-center">
+                <div class="nav-line"></div>
+                <ul class="nav justify-content-center mx-3">
+                    <li class="nav-item"><a class="nav-link" href="/Product/Category/1">iPhone</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Product/Category/2">iPad</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Product/Category/3">Mac</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Product/Category/4">Watch</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Product/Category/5">Âm thanh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Product/Category/6">Phụ kiện</a></li>
+                </ul>
+                <div class="nav-line"></div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container-fluid p-0" style="flex: 1;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <!-- Column 1: Logo & Intro -->
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="~/images/robinstore_logo.png" alt="RobinStore" style="height: 40px; margin-right: 10px;">
+                        <div class="border-start border-secondary ps-2 ms-2">
+                            <span class="text-white small">Authorised<br>Reseller</span>
+                        </div>
+                    </div>
+                    <p class="mb-3">
+                        Năm 2025, RobinStore trở thành đại lý ủy quyền của Apple. Chúng tôi phát triển chuỗi cửa hàng tiêu chuẩn và Apple Mono Store nhằm mang đến trải nghiệm tốt nhất về sản phẩm và dịch vụ của Apple cho người dùng Việt Nam.
+                    </p>
+                    
+                    <div class="footer-hotline-box">
+                        <strong>Tổng đài hỗ trợ:</strong>
+                        <span>Mua hàng: <b class="text-primary">1900.6626</b> (08:00 - 22:00)</span>
+                        <span>Bảo hành: <b class="text-primary">1900.8036</b> (08:30 - 20:00)</span>
+                    </div>
+
+                    <div class="footer-social">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Thông tin -->
+                <div class="col-md-2 mb-4">
+                    <h5>Thông tin</h5>
+                    <ul>
+                        <li><a href="#">Tin tức</a></li>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Check IMEI</a></li>
+                        <li><a href="#">Phương thức thanh toán</a></li>
+                        <li><a href="#">Thuê điểm bán lẻ</a></li>
+                        <li><a href="#">Bảo hành và sửa chữa</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Đánh giá chất lượng, khiếu nại</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Chính sách -->
+                <div class="col-md-2 mb-4">
+                    <h5>Chính sách</h5>
+                    <ul>
+                        <li><a href="#">Thu cũ đổi mới</a></li>
+                        <li><a href="#">Giao hàng</a></li>
+                        <li><a href="#">Giao hàng (ZaloPay)</a></li>
+                        <li><a href="#">Hủy giao dịch</a></li>
+                        <li><a href="#">Đổi trả</a></li>
+                        <li><a href="#">Bảo hành</a></li>
+                        <li><a href="#">Dịch vụ</a></li>
+                        <li><a href="#">Giải quyết khiếu nại</a></li>
+                        <li><a href="#">Bảo mật thông tin</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Địa chỉ & Liên hệ -->
+                <div class="col-md-4 mb-4">
+                    <h5>Địa chỉ & Liên hệ</h5>
+                    <ul>
+                        <li><a href="#">Tài khoản của tôi</a></li>
+                        <li><a href="#">Đơn đặt hàng</a></li>
+                        <li><a href="#">Hệ thống cửa hàng</a></li>
+                        <li><a href="#">Tìm Store trên Google Map</a></li>
+                    </ul>
+                    <div class="mt-3">
+                        <p class="mb-1">Mua hàng: <span class="text-white">1900.5180</span></p>
+                        <p class="mb-1">Nhánh 1: khu vực Đà Nẵng và các tỉnh thành miền Trung</p>
+                        <p class="mb-1">Nhánh 2: khu vực Hồ Chí Minh và các tỉnh thành miền Nam</p>
+                        <p class="mb-1">Nhánh 3: Khiếu nại và góp ý</p>
+                        <p class="mb-1">Doanh nghiệp: <a href="#" class="text-primary">0822.688.668</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-top border-secondary pt-3 mt-3 text-center text-white small">
+                <p class="mb-1">&copy; 2025 Công ty Trách Nhiệm Hữu Hạn Một Thành Viên Phúc. GPĐKKD: 0107465657 do Sở KH & ĐT TP. Đà Nẵng cấp ngày 30/11/2025.</p>
+                <p>Địa chỉ: Số 8 Lê Thanh Nghị, phường Hòa Cường Bắc, quận Hải Châu, thành phố Đà Nẵng, Việt Nam</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        $(document).ready(function() {
+            let timeout = null;
+            const searchInput = $('#searchInput');
+            const suggestionsBox = $('#searchSuggestions');
+            const suggestionList = $('#suggestionList');
+            const viewAllLink = $('#viewAllResults');
+
+            searchInput.on('input', function() {
+                const keyword = $(this).val().trim();
+                
+                clearTimeout(timeout);
+                
+                if (keyword.length < 2) {
+                    suggestionsBox.hide();
+                    return;
+                }
+
+                timeout = setTimeout(function() {
+                    $.ajax({
+                        url: '/Product/SearchSuggestions',
+                        data: { keyword: keyword },
+                        success: function(data) {
+                            suggestionList.empty();
+                            if (data.length > 0) {
+                                data.forEach(item => {
+                                    const li = `
+                                        <li class="list-group-item list-group-item-action p-2">
+                                            <a href="/Product/Details/${item.id}" class="d-flex align-items-center text-decoration-none text-dark">
+                                                <img src="/images/${item.image}" alt="${item.name}" style="width: 40px; height: 40px; object-fit: contain;" class="me-3 rounded">
+                                                <div>
+                                                    <div class="fw-bold small">${item.name}</div>
+                                                    <div class="text-muted small" style="font-size: 11px;">${item.price}₫</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    `;
+                                    suggestionList.append(li);
+                                });
+                                viewAllLink.attr('href', '/Product/Search?keyword=' + keyword);
+                                suggestionsBox.show();
+                            } else {
+                                suggestionsBox.hide();
+                            }
+                        }
+                    });
+                }, 300); // Debounce 300ms
+            });
+
+            // Hide suggestions when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search-bar').length) {
+                    suggestionsBox.hide();
+                }
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,92 @@
+@model OfficialAssignment_ASP.NET.Models.User
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 mb-5">
+    <h2 class="fw-bold mb-4">Hồ sơ cá nhân</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+            <i class="fa-solid fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-4" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row g-5">
+        <!-- Personal Info Form -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Thông tin tài khoản</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Profile" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên đăng nhập</label>
+                            <input type="text" class="form-control rounded-pill bg-light" value="@Model.Username" readonly disabled>
+                            <div class="form-text">Tên đăng nhập không thể thay đổi.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ và tên</label>
+                            <input type="text" name="FullName" class="form-control rounded-pill" value="@Model.FullName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" name="Email" class="form-control rounded-pill" value="@Model.Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="text" name="Phone" class="form-control rounded-pill" value="@Model.Phone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Địa chỉ</label>
+                            <textarea name="Address" class="form-control rounded-4" rows="3">@Model.Address</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="fa-solid fa-save me-2"></i> Lưu thay đổi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Form -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Đổi mật khẩu</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="ChangePassword" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mật khẩu hiện tại</label>
+                            <input type="password" name="currentPassword" class="form-control rounded-pill" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mật khẩu mới</label>
+                            <input type="password" name="newPassword" class="form-control rounded-pill" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Xác nhận mật khẩu mới</label>
+                            <input type="password" name="confirmPassword" class="form-control rounded-pill" required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary rounded-pill px-4">
+                            <i class="fa-solid fa-key me-2"></i> Đổi mật khẩu
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

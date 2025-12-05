@@ -1,0 +1,62 @@
+@model OfficialAssignment_ASP.NET.Models.User
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 p-4">
+                <div class="text-center mb-4">
+                    <i class="fa-brands fa-apple fa-3x mb-3"></i>
+                    <h2 class="fw-bold">Tạo tài khoản mới</h2>
+                    <p class="text-muted">Trở thành thành viên của RobinStore ngay hôm nay.</p>
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger rounded-3">@ViewBag.Error</div>
+                }
+
+                <form asp-action="Register" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Tên đăng nhập (*)</label>
+                            <input type="text" name="Username" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Họ và tên</label>
+                            <input type="text" name="FullName" class="form-control rounded-3">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mật khẩu (*)</label>
+                        <input type="password" name="Password" class="form-control rounded-3" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Xác nhận mật khẩu (*)</label>
+                        <input type="password" name="confirmPassword" class="form-control rounded-3" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="email" name="Email" class="form-control rounded-3">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Số điện thoại</label>
+                        <input type="text" name="Phone" class="form-control rounded-3">
+                    </div>
+
+                    <div class="d-grid mb-4 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill">Đăng ký</button>
+                    </div>
+                </form>
+
+                <div class="text-center">
+                    <p class="text-muted">Đã có tài khoản? <a href="/Account/Login" class="text-primary text-decoration-none fw-bold">Đăng nhập ngay</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

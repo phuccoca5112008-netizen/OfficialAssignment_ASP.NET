@@ -1,0 +1,135 @@
+@model List<OfficialAssignment_ASP.NET.Models.Product>
+@{
+    ViewData["Title"] = ViewBag.CategoryName;
+}
+
+<!-- Category Banner -->
+@{
+    string bannerImage = "~/images/banner_hq_3.png"; // Default
+    string categoryName = ViewBag.CategoryName as string;
+
+    if (!string.IsNullOrEmpty(categoryName))
+    {
+        if (categoryName.Contains("iPhone", StringComparison.OrdinalIgnoreCase))
+        {
+            bannerImage = "~/images/banner_hq_3.png";
+        }
+        else if (categoryName.Contains("iPad", StringComparison.OrdinalIgnoreCase))
+        {
+            bannerImage = "~/images/banner_hq_1.png";
+        }
+        else if (categoryName.Contains("Mac", StringComparison.OrdinalIgnoreCase))
+        {
+            bannerImage = "~/images/banner_hq_2.png";
+        }
+        else if (categoryName.Contains("Watch", StringComparison.OrdinalIgnoreCase))
+        {
+            bannerImage = "~/images/banner_hq_4.png";
+        }
+        else if (categoryName.Contains("Âm thanh", StringComparison.OrdinalIgnoreCase))
+        {
+            bannerImage = "https://shopdunk.com/images/uploaded/banner/Banner%202025/thang_11/danh%20mu%CC%A3c/am%20thanh/danh%20m%E1%BB%A5c-AT_Danh%20m%E1%BB%A5c%20copy%203.png"; 
+        }
+        else if (categoryName.Contains("Phụ kiện", StringComparison.OrdinalIgnoreCase))
+        {
+            bannerImage = "https://shopdunk.com/images/uploaded/banner/Banner%202025/thang_11/danh%20mu%CC%A3c/phu%20kien/danh%20m%E1%BB%A5c-ph%E1%BB%A5%20ki%E1%BB%87n%20b%E1%BB%95%20sung_Danh%20m%E1%BB%A5c.png";
+        }
+    }
+}
+
+<div class="w-100 mb-5">
+    <img src="@Url.Content(bannerImage)" alt="@ViewBag.CategoryName" class="w-100" style="max-height: 400px; object-fit: cover;">
+</div>
+
+<div class="container mb-4">
+    <form method="get" action="/Product/Category/@Model.FirstOrDefault()?.CategoryId" class="row g-3 align-items-end bg-light p-3 rounded-4 shadow-sm">
+        <input type="hidden" name="id" value="@ViewContext.RouteData.Values["id"]" />
+        
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Sắp xếp theo</label>
+            <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                <option value="">Mặc định</option>
+                <option value="price_asc" selected="@(ViewBag.CurrentSort == "price_asc")">Giá: Thấp đến Cao</option>
+                <option value="price_desc" selected="@(ViewBag.CurrentSort == "price_desc")">Giá: Cao đến Thấp</option>
+                <option value="name_asc" selected="@(ViewBag.CurrentSort == "name_asc")">Tên: A - Z</option>
+                <option value="name_desc" selected="@(ViewBag.CurrentSort == "name_desc")">Tên: Z - A</option>
+            </select>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Giá từ (VNĐ)</label>
+            <input type="number" name="minPrice" class="form-control" value="@ViewBag.MinPrice" placeholder="0">
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Đến (VNĐ)</label>
+            <input type="number" name="maxPrice" class="form-control" value="@ViewBag.MaxPrice" placeholder="100.000.000">
+        </div>
+        
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100 fw-bold">
+                <i class="fa-solid fa-filter me-2"></i> Lọc sản phẩm
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row">
+        @if (Model.Count == 0)
+        {
+            <div class="col-12 text-center">
+                <p>Chưa có sản phẩm nào trong danh mục này.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 18px; transition: transform 0.3s;">
+                        <div class="position-relative" style="height: 250px; overflow: hidden; padding: 20px;">
+                            @if (item.Discount > 0)
+                            {
+                                <div class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 m-2 rounded-pill fw-bold" style="font-size: 12px; z-index: 10;">
+                                    Giảm @item.Discount%
+                                </div>
+                            }
+                            <img src="~/images/@item.Image" 
+                                 class="card-img-top" 
+                                 alt="@item.Name" 
+                                 style="width: 100%; height: 100%; object-fit: contain;"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/300x300?text=@item.Name';">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold" style="font-size: 16px;">@item.Name</h5>
+                            @if (item.Discount > 0)
+                            {
+                                <p class="card-text text-danger fw-bold mb-0" style="font-size: 18px;">
+                                    @((item.Price * (100 - item.Discount) / 100).ToString("N0")) đ
+                                </p>
+                                <p class="card-text text-muted text-decoration-line-through small">
+                                    @item.Price.ToString("N0") đ
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text text-primary fw-bold" style="font-size: 18px;">@item.Price.ToString("N0") đ</p>
+                            }
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pb-4 text-center">
+                             <a href="/Product/Details/@item.Id" class="btn btn-primary px-4">Mua ngay</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>

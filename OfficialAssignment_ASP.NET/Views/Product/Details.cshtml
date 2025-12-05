@@ -1,0 +1,234 @@
+@model OfficialAssignment_ASP.NET.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent p-0 mb-3">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">@Model.CategoryName</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- LEFT COLUMN: Images -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm p-3 mb-3 text-center" style="border-radius: 20px;">
+                <img src="~/images/@Model.Image" 
+                     alt="@Model.Name" 
+                     class="img-fluid" 
+                     style="max-height: 450px; object-fit: contain;"
+                     onerror="this.onerror=null;this.src='https://placehold.co/500x500?text=@Model.Name';">
+            </div>
+            <!-- Thumbnails (Static for demo) -->
+            <div class="d-flex justify-content-center gap-2">
+                <div class="border rounded p-1" style="width: 60px; height: 60px; cursor: pointer;"><img src="~/images/@Model.Image" class="w-100 h-100 object-fit-contain" onerror="this.src='https://placehold.co/60x60'"></div>
+                <div class="border rounded p-1" style="width: 60px; height: 60px; cursor: pointer;"><img src="~/images/@Model.Image" class="w-100 h-100 object-fit-contain" onerror="this.src='https://placehold.co/60x60'"></div>
+                <div class="border rounded p-1" style="width: 60px; height: 60px; cursor: pointer;"><img src="~/images/@Model.Image" class="w-100 h-100 object-fit-contain" onerror="this.src='https://placehold.co/60x60'"></div>
+                <div class="border rounded p-1" style="width: 60px; height: 60px; cursor: pointer;"><img src="~/images/@Model.Image" class="w-100 h-100 object-fit-contain" onerror="this.src='https://placehold.co/60x60'"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Info & Actions -->
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-2">@Model.Name</h2>
+            
+            <div class="d-flex align-items-end mb-3">
+                @if (Model.Discount > 0)
+                {
+                    <h3 class="text-danger fw-bold me-3 mb-0">@((Model.Price * (100 - Model.Discount) / 100).ToString("N0"))₫</h3>
+                    <span class="text-decoration-line-through text-muted fs-5">@Model.Price.ToString("N0")₫</span>
+                    <span class="badge bg-danger ms-3 align-self-center">Giảm @Model.Discount%</span>
+                }
+                else
+                {
+                    <h3 class="text-primary fw-bold me-3 mb-0">@Model.Price.ToString("N0")₫</h3>
+                }
+            </div>
+
+            <!-- Dynamic Size/Capacity Section -->
+            @if (Model.Size != "Standard" && !string.IsNullOrEmpty(Model.Size))
+            {
+                <div class="mb-3">
+                    <label class="fw-bold small mb-2">
+                        @if (Model.CategoryId == 1 || Model.CategoryId == 2 || Model.CategoryId == 3) // iPhone, iPad, Mac
+                        {
+                            @:Dung lượng
+                        }
+                        else if (Model.CategoryId == 4) // Watch
+                        {
+                            @:Kích thước mặt
+                        }
+                        else
+                        {
+                            @:Kích thước / Loại
+                        }
+                    </label>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary active" style="min-width: 80px;">@Model.Size</button>
+                        @if (Model.CategoryId == 1 || Model.CategoryId == 2 || Model.CategoryId == 3)
+                        {
+                            <button class="btn btn-outline-secondary" style="min-width: 80px;">512GB</button>
+                            <button class="btn btn-outline-secondary" style="min-width: 80px;">1TB</button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Color Options -->
+            <div class="mb-4">
+                <label class="fw-bold small mb-2">Màu sắc: @Model.Color</label>
+                <div class="d-flex gap-2">
+                    <div class="rounded-circle border border-2 border-primary" style="width: 35px; height: 35px; background-color: #5e5e5e; cursor: pointer;"></div>
+                    <div class="rounded-circle border" style="width: 35px; height: 35px; background-color: #f2f2f2; cursor: pointer;"></div>
+                    <div class="rounded-circle border" style="width: 35px; height: 35px; background-color: #fae7cf; cursor: pointer;"></div>
+                    <div class="rounded-circle border" style="width: 35px; height: 35px; background-color: #465364; cursor: pointer;"></div>
+                </div>
+            </div>
+
+            <!-- Promotion Box -->
+            <div class="card mb-4 border-danger" style="border-style: dashed;">
+                <div class="card-header bg-danger text-white fw-bold py-2">
+                    <i class="fa-solid fa-gift me-2"></i> Ưu đãi
+                </div>
+                <div class="card-body bg-light">
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i>Giảm đến 500.000đ khi thanh toán qua VNPAY-QR</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i>Tặng gói iCloud 50GB miễn phí 3 tháng</li>
+                        <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i>Thu cũ đổi mới trợ giá đến 2.000.000đ</li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>Giảm 20% khi mua kèm phụ kiện bảo vệ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100 py-3 text-uppercase fw-bold mb-2" style="font-size: 1.1rem;">Mua ngay</button>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-primary w-100 py-2 small">
+                                <strong>Trả góp 0%</strong><br>Qua công ty tài chính
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-primary w-100 py-2 small">
+                                <strong>Trả góp 0% qua thẻ</strong><br>Visa, Mastercard, JCB
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger w-100 py-2 mt-2">
+                        <i class="fa-solid fa-rotate me-2"></i> Thu cũ đổi mới
+                    </button>
+                </div>
+            </form>
+
+            <!-- Policy Box -->
+            <div class="card bg-light border-0 small">
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fa-solid fa-box me-2 text-primary"></i>Bộ sản phẩm gồm: Hộp, Sách hướng dẫn, Cây lấy sim, Cáp Type C</li>
+                        <li class="mb-2"><i class="fa-solid fa-shield-halved me-2 text-primary"></i>Bảo hành chính hãng 1 năm</li>
+                        <li class="mb-2"><i class="fa-solid fa-truck-fast me-2 text-primary"></i>Giao hàng nhanh toàn quốc</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Description Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold border-bottom pb-2 mb-3">Mô tả sản phẩm</h3>
+            <div class="bg-white p-4 rounded shadow-sm">
+                <p>@Model.Description</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="row mt-5 mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold border-bottom pb-2 mb-4">Đánh giá sản phẩm</h3>
+            
+            <!-- Review Form (Only for verified buyers) -->
+            @if (ViewBag.CanReview == true)
+            {
+                <div class="card mb-4 border-0 shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Viết đánh giá của bạn</h5>
+                        <form asp-action="AddReview" method="post">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Đánh giá sao</label>
+                                <div class="rating">
+                                    <input type="radio" name="rating" value="5" id="star-5" checked><label for="star-5">★</label>
+                                    <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">★</label>
+                                    <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">★</label>
+                                    <input type="radio" name="rating" value="2" id="star-2"><label for="star-2">★</label>
+                                    <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">★</label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nội dung đánh giá</label>
+                                <textarea name="content" class="form-control" rows="3" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi đánh giá</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info rounded-4 mb-4">
+                    <i class="fa-solid fa-circle-info me-2"></i> Bạn cần mua sản phẩm này để viết đánh giá.
+                </div>
+            }
+
+            <!-- Reviews List -->
+            <div class="reviews-list">
+                @if (Model.Reviews != null && Model.Reviews.Count > 0)
+                {
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="card border-0 shadow-sm mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold mb-0">@review.UserName</h6>
+                                    <small class="text-muted">@review.CreatedDate.ToString("dd/MM/yyyy")</small>
+                                </div>
+                                <div class="text-warning mb-2">
+                                    @for (int i = 0; i < review.Rating; i++)
+                                    {
+                                        <i class="fa-solid fa-star"></i>
+                                    }
+                                    @for (int i = review.Rating; i < 5; i++)
+                                    {
+                                        <i class="fa-regular fa-star"></i>
+                                    }
+                                </div>
+                                <p class="mb-0 text-secondary">@review.Content</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted text-center py-4">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+    .rating input { display: none; }
+    .rating label { font-size: 30px; color: #ccc; cursor: pointer; padding: 0 5px; }
+    .rating label:hover, .rating label:hover ~ label, .rating input:checked ~ label { color: #ffc107; }
+</style>

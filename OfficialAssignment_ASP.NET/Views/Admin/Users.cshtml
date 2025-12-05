@@ -1,0 +1,110 @@
+@model List<OfficialAssignment_ASP.NET.Models.User>
+@{
+    ViewData["Title"] = "Quản lý thành viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int? currentUserId = Context.Session.GetInt32("UserId");
+}
+
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Quản lý thành viên</h2>
+        <div>
+            <a href="/Admin" class="btn btn-outline-secondary rounded-pill me-2">
+                <i class="fa-solid fa-arrow-left me-2"></i> Dashboard
+            </a>
+            <a href="/Admin/CreateUser" class="btn btn-primary rounded-pill">
+                <i class="fa-solid fa-user-plus me-2"></i> Thêm thành viên
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-4" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Search Bar -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 p-3">
+        <form action="/Admin/Users" method="get" class="d-flex">
+            <input type="text" name="keyword" class="form-control rounded-pill me-2" 
+                   placeholder="Tìm kiếm theo tên, email, tài khoản..." value="@ViewBag.Keyword">
+            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="py-3 ps-4">ID</th>
+                    <th class="py-3">Tài khoản</th>
+                    <th class="py-3">Họ tên</th>
+                    <th class="py-3">Email</th>
+                    <th class="py-3">Vai trò</th>
+                    <th class="py-3 text-end pe-4">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-4 fw-bold">#@item.Id</td>
+                        <td>@item.Username</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>
+                            @if (item.Role == 0)
+                            {
+                                <span class="badge bg-danger">Admin</span>
+                            }
+                            else if (item.Role == 1)
+                            {
+                                <span class="badge bg-info text-dark">Nhân viên</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Khách hàng</span>
+                            }
+                        </td>
+                        <td class="text-end pe-4">
+                            @if (item.Id != currentUserId)
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" 
+                                        data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Xác nhận xóa</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                Bạn có chắc chắn muốn xóa tài khoản <strong>@item.Username</strong> không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                                                <form asp-action="DeleteUser" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-danger rounded-pill">Xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

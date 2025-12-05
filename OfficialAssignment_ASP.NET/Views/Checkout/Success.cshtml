@@ -1,0 +1,63 @@
+@model OfficialAssignment_ASP.NET.Models.Order
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+
+<div class="container text-center py-5" style="margin-top: 50px; margin-bottom: 50px;">
+    @if (Model != null && Model.PaymentMethod == "QR" && Model.PaymentStatus == "Chưa thanh toán")
+    {
+        <div class="mb-4">
+            <h2 class="fw-bold text-primary mb-3">Thanh toán chuyển khoản</h2>
+            <p class="text-muted mb-4">Vui lòng quét mã QR bên dưới để hoàn tất thanh toán.</p>
+            
+            <div class="card shadow-sm d-inline-block p-3 bg-white rounded-4">
+                <img src="https://img.vietqr.io/image/MB-0905595408-compact.png?amount=@((int)Model.TotalAmount)&addInfo=DH@(Model.Id)&accountName=Tran%20Viet%20Tam%20Phuc" 
+                     alt="VietQR" style="max-width: 300px;" class="img-fluid mb-3">
+                
+                <div class="text-start px-3">
+                    <p class="mb-1"><strong>Ngân hàng:</strong> MB Bank</p>
+                    <p class="mb-1"><strong>Số tài khoản:</strong> <span class="text-primary fw-bold">0905595408</span></p>
+                    <p class="mb-1"><strong>Chủ tài khoản:</strong> TRAN VIET TAM PHUC</p>
+                    <p class="mb-1"><strong>Số tiền:</strong> <span class="text-danger fw-bold">@Model.TotalAmount.ToString("N0")₫</span></p>
+                    <p class="mb-0"><strong>Nội dung:</strong> <span class="text-success fw-bold">DH@(Model.Id)</span></p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <form asp-action="ConfirmPayment" method="post">
+                    <input type="hidden" name="orderId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 fw-bold shadow">
+                        <i class="fa-solid fa-check me-2"></i> Tôi đã thanh toán
+                    </button>
+                </form>
+                <p class="text-muted small mt-2">Sau khi chuyển khoản, vui lòng bấm nút trên để xác nhận.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mb-4">
+            <i class="fa-regular fa-circle-check text-success" style="font-size: 80px;"></i>
+        </div>
+        <h1 class="fw-bold mb-3">Đặt hàng thành công!</h1>
+        <p class="lead text-muted mb-5">
+            Cảm ơn bạn đã mua sắm tại RobinStore.<br>
+            @if (Model != null && Model.PaymentMethod == "QR")
+            {
+                <span>Chúng tôi đã ghi nhận thanh toán của bạn. Admin sẽ kiểm tra và giao hàng sớm nhất.</span>
+            }
+            else
+            {
+                <span>Chúng tôi sẽ liên hệ với bạn sớm nhất để xác nhận đơn hàng.</span>
+            }
+        </p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/" class="btn btn-primary rounded-pill px-5 py-2 fw-bold">
+                Tiếp tục mua sắm
+            </a>
+            <!-- Optional: Link to Order History if implemented -->
+            <!-- <a href="/Account/Orders" class="btn btn-outline-secondary rounded-pill px-5 py-2">Xem đơn hàng</a> -->
+        </div>
+    }
+</div>
