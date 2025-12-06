@@ -5,6 +5,7 @@ using OfficialAssignment_ASP.NET.Models.DAL;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Collections.Generic; // Thêm namespace này để dùng List<Order>
 
 namespace OfficialAssignment_ASP.NET.Controllers
 {
@@ -30,6 +31,15 @@ namespace OfficialAssignment_ASP.NET.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
+            // --- ĐOẠN CODE MỚI CHÈN VÀO ĐỂ FIX LỖI TEST ---
+            // Kiểm tra đầu vào rỗng để tránh gọi DatabaseHelper khi tham số null (gây lỗi NullReference trong Test)
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                ViewBag.Error = "Vui lòng nhập tên đăng nhập và mật khẩu!";
+                return View();
+            }
+            // ----------------------------------------------
+
             string query = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -79,6 +89,13 @@ namespace OfficialAssignment_ASP.NET.Controllers
         [HttpPost]
         public IActionResult Register(User user, string confirmPassword)
         {
+            // Thêm kiểm tra null cho user để an toàn hơn cho Test
+            if (user == null)
+            {
+                ViewBag.Error = "Dữ liệu không hợp lệ!";
+                return View();
+            }
+
             if (user.Password != confirmPassword)
             {
                 ViewBag.Error = "Mật khẩu xác nhận không khớp!";
@@ -99,7 +116,7 @@ namespace OfficialAssignment_ASP.NET.Controllers
             // Insert new user (Default Role = 2: Customer)
             string insertQuery = @"INSERT INTO Users (Username, Password, FullName, Email, Phone, Address, Role) 
                                    VALUES (@Username, @Password, @FullName, @Email, @Phone, @Address, 2)";
-            
+
             SqlParameter[] insertParams = new SqlParameter[]
             {
                 new SqlParameter("@Username", user.Username),
@@ -159,16 +176,16 @@ namespace OfficialAssignment_ASP.NET.Controllers
             }
 
             Order order = null;
-            
+
             // Get Order Info and verify it belongs to the user
             string orderQuery = "SELECT * FROM Orders WHERE Id = @Id AND UserId = @UserId";
-            SqlParameter[] orderParams = new SqlParameter[] 
-            { 
+            SqlParameter[] orderParams = new SqlParameter[]
+            {
                 new SqlParameter("@Id", id),
                 new SqlParameter("@UserId", userId)
             };
             DataTable dtOrder = _dbHelper.ExecuteQuery(orderQuery, orderParams);
-            
+
             if (dtOrder.Rows.Count > 0)
             {
                 DataRow row = dtOrder.Rows[0];
@@ -200,8 +217,8 @@ namespace OfficialAssignment_ASP.NET.Controllers
                         ProductId = Convert.ToInt32(dRow["ProductId"]),
                         Quantity = Convert.ToInt32(dRow["Quantity"]),
                         Price = Convert.ToDecimal(dRow["Price"]),
-                        Product = new Product 
-                        { 
+                        Product = new Product
+                        {
                             Name = dRow["ProductName"].ToString(),
                             Image = dRow["Image"].ToString()
                         }
@@ -251,7 +268,7 @@ namespace OfficialAssignment_ASP.NET.Controllers
             string query = @"UPDATE Users 
                              SET FullName = @FullName, Email = @Email, Phone = @Phone, Address = @Address 
                              WHERE Id = @Id";
-            
+
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@FullName", model.FullName ?? ""),
