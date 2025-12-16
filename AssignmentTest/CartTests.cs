@@ -38,5 +38,23 @@ namespace AssignmentTest
             // Assert
             Assert.AreEqual(1, cart.Count);
         }
+
+        [TestMethod]
+        public void Cart_Remove_ExistingItem_DecreasesCount()
+        {
+            // Arrange (Chuẩn bị)
+            var cart = new List<OrderDetail>();
+            var itemToRemove = new OrderDetail { ProductId = 1, Quantity = 1 };
+
+            // Giả lập giỏ hàng đang có sẵn 1 món này
+            cart.Add(itemToRemove);
+
+            // Act (Hành động: Xóa món đó đi)
+            cart.Remove(itemToRemove);
+
+            // Assert (Kiểm tra)
+            // Ban đầu có 1, xóa 1 thì phải còn 0
+            Assert.AreEqual(0, cart.Count);
+        }
     }
 }

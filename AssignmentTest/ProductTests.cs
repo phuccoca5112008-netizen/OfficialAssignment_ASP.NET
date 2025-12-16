@@ -33,5 +33,22 @@ namespace AssignmentTest
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void Product_Category_IdInvalid_RedirectsToHome()
+        {
+            // Arrange
+            // Vẫn truyền null vì code check ID sai sẽ return TRƯỚC khi gọi Database
+            var controller = new ProductController(null!);
+
+            // Act
+            // Gọi hàm Category với id = -1. Các tham số sau (sort, price) để null hoặc rỗng
+            var result = controller.Category(-1, "", null, null) as RedirectToActionResult;
+
+            // Assert
+            Assert.IsNotNull(result); // Kết quả phải là Chuyển hướng (Redirect)
+            Assert.AreEqual("Index", result.ActionName);    // Về trang Index
+            Assert.AreEqual("Home", result.ControllerName); // Của HomeController
+        }
     }
 }
